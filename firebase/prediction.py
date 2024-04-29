@@ -1,24 +1,30 @@
-from scipy.stats import mode
 from collections import Counter
 
 def prediction_victory(model_victoria, X_test_victoria, y_test_victoria, home_team, away_team):
-    prediccion_victoria = model_victoria.predict(X_test_victoria)[0]
+    prediccion_victoria = model_victoria.predict(X_test_victoria)
+
     etiquetas_reales = y_test_victoria
-    conteo_aciertos = sum(prediccion_victoria == etiquetas_reales)
-    porcentaje_aciertos = round((conteo_aciertos / len(etiquetas_reales)) * 100, 2)
 
-    if prediccion_victoria == 'H':
-        prediccion_victoria = f'{home_team} gana ({porcentaje_aciertos}%)'
-    elif prediccion_victoria == 'A':
-        prediccion_victoria = f'{away_team} gana ({porcentaje_aciertos}%)'
-    else:
-        prediccion_victoria = f'Empate ({porcentaje_aciertos}%)'
+    # Contadores para cada resultado
+    total_partidos = len(etiquetas_reales)
+    total_victorias_local = sum(pred == 'H' and real == 'H' for pred, real in zip(prediccion_victoria, etiquetas_reales))
+    total_empates = sum(pred == 'D' and real == 'D' for pred, real in zip(prediccion_victoria, etiquetas_reales))
+    total_victorias_visitante = sum(pred == 'A' and real == 'A' for pred, real in zip(prediccion_victoria, etiquetas_reales))
 
-    return prediccion_victoria
+    # Calcular porcentajes
+    porcentaje_victorias_local = (total_victorias_local / total_partidos) * 100
+    porcentaje_empates = (total_empates / total_partidos) * 100
+    porcentaje_victorias_visitante = (total_victorias_visitante / total_partidos) * 100
+
+    # Crear cadena de predicción
+    prediccion_de_victoria = f'{home_team} ({porcentaje_victorias_local:.2f}%) Draw ({porcentaje_empates:.2f}%) {away_team} ({porcentaje_victorias_visitante:.2f}%)'
+
+    return prediccion_de_victoria
 
 def prediction_corner(model_corners, X_test_corners):
-    prediccion_corners = model_corners.predict(X_test_corners)[0]
-    prediction_corner = str(prediccion_corners)
+    prediccion_corners = model_corners.predict(X_test_corners)
+    promedio = round(sum(prediccion_corners) / len(prediccion_corners), 2)
+    prediction_corner = str(promedio)
 
     return prediction_corner
 
@@ -37,8 +43,9 @@ def prediction_corners_away(model_corners_equipo_visitante, X_test_corners_equip
     return prediction_away
 
 def prediction_yellow_cards(model_tarjetas, X_test_tarjetas):
-    prediccion_tarjetas = model_tarjetas.predict(X_test_tarjetas)[0]
-    prediction_cards = str(prediccion_tarjetas)
+    prediccion_tarjetas = model_tarjetas.predict(X_test_tarjetas)
+    promedio = round(sum(prediccion_tarjetas) / len(prediccion_tarjetas), 2)
+    prediction_cards = str(promedio)
 
     return prediction_cards
 
@@ -70,9 +77,12 @@ def prediction_goals_away(model_goals_away, X_test_goals_away, away_team):
     return prediction_away
 
 def prediction_btts(model_ambos_marcan, X_test_ambos_marcan):
-    prediccion_ambos_marcan = model_ambos_marcan.predict(X_test_ambos_marcan)[0]
+    prediccion_ambos_marcan = model_ambos_marcan.predict(X_test_ambos_marcan)
 
-    if prediccion_ambos_marcan == True:
+    frecuencias = Counter(prediccion_ambos_marcan)
+    valor_mas_comun = frecuencias.most_common(1)[0][0]
+
+    if valor_mas_comun == True:
         prediccion_btts = f'Sí'
     else:
         prediccion_btts = f'No'
