@@ -1,0 +1,65 @@
+h2 {
+    font-size: 45px;
+}
+
+p {
+    font-size: 18px;
+}
+
+.st-an {
+    background-color: #2d66ff;
+    font-size: 25px;
+}
+
+.st-emotion-cache-1itgcrf {
+    border: 1px solid #FFFB00;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.stSelectbox .st-emotion-cache-aoyl2m .st-emotion-cache-1gv5c5a p {
+    font-size: 18px;
+}
+
+input[type=text], input[type=email] {
+    width: 100%; 
+    padding: 12px;
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px; 
+    margin-bottom: 16px; 
+    resize: vertical;
+    max-height: 200px;
+}
+
+textarea {
+    width: 100%; 
+    padding: 12px;
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px; 
+    margin-bottom: 16px; 
+    resize: vertical;
+    max-height: 200px;
+    min-height: 100px;
+}
+  
+button[type=submit] {
+    background-color: #0073ff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+  
+  /* When moving the mouse over the submit button, add a darker green color */
+button[type=submit]:hover {
+    background-color: #2d66ff;
+}
+
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
