@@ -56,8 +56,9 @@ def prediction_over_under(model_over_under, X_test_over_under):
     return prediccion_ou
 
 def prediction_goals_home(model_goals_local, X_test_goals_local, home_team):
-    prediccion_goals_local = model_goals_local.predict(X_test_goals_local)[0][0]
-    prediction_home = str(prediccion_goals_local)
+    prediccion_goals_local = model_goals_local.predict(X_test_goals_local)
+    promedio = round(sum(prediccion_goals_local) / len(prediccion_goals_local), 2)
+    prediction_home = str(promedio)
 
     return prediction_home
 
