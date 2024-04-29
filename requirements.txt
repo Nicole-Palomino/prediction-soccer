@@ -7,3 +7,4 @@ scipy==1.13.0
 streamlit==1.33.0
 streamlit_lottie==0.0.5
 streamlit_option_menu==0.3.12
+mode==4.4.0
