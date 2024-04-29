@@ -1,17 +1,16 @@
 import streamlit as st
-import requests
 import time
 from streamlit_option_menu import option_menu
 from firebase.data_processing import get_data
 from firebase.prepare_data import select_home_away
 from firebase.main import predictions_results
-from streamlit_lottie import st_lottie
 
 # Inicializar la pagina
 st.set_page_config(page_title='Sistema de predicción de fútbol', page_icon='⚽', layout='wide')
 
 # url de la imagen para la seccion predicciones
 url_imagen = "https://i.postimg.cc/Wprt7pwf/futbol.png"
+video_path  = "./img/video-presentacion.mp4"
 
 # Estilos css
 def local_css(file_name):
@@ -64,15 +63,15 @@ def main_streamlit():
                 st.markdown(contact_form, unsafe_allow_html=True)
 
             with column2:
-                st.empty()
+                st.video(video_path, format='video/mp4', start_time=0, loop=True)
     
     # seccion predicciones
     if selected == "Predicciones":
-
+        
         if st.session_state.show_predictions:
-
+            
             ligas_disponibles = ["Premier League", "LaLiga", "SerieA", "Bundesliga", "Eredivisie", "Ligue 1", "Jupiler Pro League", "Premiership"]
-
+    
             col1, col2= st.columns([2,2])
             with st.container():
                 with col1:
@@ -82,14 +81,14 @@ def main_streamlit():
                             st.image(url_imagen, use_column_width=True)
 
                         with right_column:
-                            st.title("Predicciones Deportivas")  
-                    
+                            st.title("Predicciones Deportivas") 
+
                     liga_seleccionada = st.selectbox("🌎 Selecciona una liga:", ligas_disponibles)
 
                     equipos = get_teams_for_league(liga_seleccionada)
                     equipo_home = st.selectbox("🏠 Equipo local:", equipos)
                     equipo_away = st.selectbox("✈ Equipo visitante:", equipos)
-
+                    
                     df = get_file_league(liga_seleccionada)
 
                     st.write("Trabajo desarrollado por: [@nicoleepalomino](https://www.instagram.com/nicolee.palomino/)")
@@ -111,19 +110,19 @@ def main_streamlit():
                         predictions = predictions_results(partidos_equipo_local, partidos_equipo_visitante, equipo_home, equipo_away)
                         victory_prediction, corner_prediction, corner_home_prediction, corner_away_prediction, yc_prediction, over_under_prediction, goals_home_prediction, goals_away_prediction, btts_prediction, prob_corners = predictions[0], predictions[1], predictions[2], predictions[3], predictions[4], predictions[5], predictions[6], predictions[7], predictions[8], predictions[9]
                         
-                        st.subheader("Predicciones:")
+                        st.subheader("**PREDICCIONES**")
                         st.write("Resultado:", victory_prediction)
                         st.write("Saques de Esquinas:", corner_prediction)
                         st.write(f"Saques de Esquinas ({equipo_home}):", corner_home_prediction)
                         st.write(f"Saques de Esquinas ({equipo_away}):", corner_away_prediction)
                         st.write("Tarjetas amarillas:", yc_prediction)
-                        st.write("Over/Under 2.5 goles:", over_under_prediction)
+                        st.write("Over/Under:", over_under_prediction)
                         st.write(f"Goles ({equipo_home}):", goals_home_prediction)
                         st.write(f"Goles ({equipo_away}):", goals_away_prediction)
                         st.write("Ambos equipos marcan:", btts_prediction)
                         st.write(prob_corners)
                     else :
-                        st.warning('Seleccione equipos disponibles ...', icon='⚠️')
+                        st.warning('Seleccione bien los equipos', icon='⚠️')
 
         else :
             st.write("Por favor, suscríbete para acceder a las sección de predicciones")
