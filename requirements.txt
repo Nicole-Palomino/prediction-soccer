@@ -1,9 +1,8 @@
 numpy==1.26.4
 pandas==1.5.3
 python-telegram-bot==21.1.1
-Requests==2.31.0
 scikit_learn==1.2.2
 scipy==1.13.0
 streamlit==1.33.0
-streamlit_lottie==0.0.5
 streamlit_option_menu==0.3.12
+openpyxl==3.1.2
