@@ -6,10 +6,14 @@ from firebase.prepare_data import select_home_away
 from firebase.main import predictions_results
 
 # Inicializar la pagina
-st.set_page_config(page_title='Sistema de predicción de fútbol', page_icon='⚽', layout='wide')
+st.set_page_config(
+    page_title='Sistema de predicción de fútbol', 
+    page_icon='⚽', 
+    layout='wide',
+)
 
 # url de la imagen para la seccion predicciones
-url_imagen = "https://i.postimg.cc/Wprt7pwf/futbol.png"
+url_imagen = "https://i.postimg.cc/8cWxW26H/jugador-de-futbol.png"
 video_path  = "./img/video-presentacion.mp4"
 
 # Estilos css
@@ -23,24 +27,24 @@ local_css("./css/style.css")
 def main_streamlit():
 
     # sidebar con las opciones disponibles
-    with st.sidebar:
-        selected = option_menu(
-            menu_title=None, 
-             options=["Inicio", "Predicciones", "Contacto"], 
-            icons=["house", "robot", "envelope"],
-            menu_icon="cast",  
-            default_index=0,  
-            styles={
-                    "icon": {"color": "#fbbc04", "font-size": "20px"},
-                    "nav-link": {
-                        "font-size": "25px",
-                        "text-align": "left",
-                        "margin": "5px 0px",
-                        "--hover-color": "#0073ff",
-                    },
-                    "nav-link-selected": {"background-color": "#2d66ff"},
+    selected = option_menu(
+        menu_title=None, 
+        options=["Inicio", "Predicciones", "Contacto"], 
+        icons=["house", "robot", "envelope"],
+        menu_icon="cast",  
+        default_index=0,  
+        orientation="horizontal",
+        styles={
+            "icon": {"color": "green", "font-size": "22px"},
+            "nav-link": {
+                "font-size": "20px",
+                "--hover-color": "#A7C957",
+                "text-align": "center",
             },
-        )
+            "nav-item": {"margin": "0px 7px"},
+            "nav-link-selected": {"background-color": "#A7C957"},
+        },
+    )
 
     # seccion inicio
     if selected == "Inicio":
@@ -49,8 +53,8 @@ def main_streamlit():
         with st.container():
 
             with column1:
-                st.header('Potencia tu pasión por el fútbol con predicciones confiables')
-                st.write('Plataforma que utiliza algoritmos de **:blue[aprendizaje automático]** y **:blue[análisis de datos]**, combinamos la emoción del fútbol con la precisión de los datos para ofrecerte predicciones que impulsan tu experiencia futbolística. Con un enfoque en la innovación y la fiabilidad, estamos aquí para llevarte más allá de los resultados y hacerte sentir parte del juego.')
+                st.header('Descubre tu pasión por el fútbol con predicciones confiables')
+                st.write('Es una plataforma que utiliza algoritmos de **aprendizaje automático** y **análisis de datos**, combinamos la emoción del fútbol con la precisión de los datos para ofrecerte predicciones que impulsan tu experiencia futbolística. Con un enfoque en la innovación y la fiabilidad. ¡Hazte con el control del juego y sé el protagonista de cada partido!')
                 st.markdown("*Estamos en modo de prueba no es necesario presionar el boton de suscribirse*")
                 contact_form = f"""
                     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
@@ -63,7 +67,7 @@ def main_streamlit():
                 st.markdown(contact_form, unsafe_allow_html=True)
 
             with column2:
-                st.video(video_path, format='video/mp4', start_time=0, loop=True)
+                st.video(video_path, format='video/mp4', start_time=0)
     
     # seccion predicciones
     if selected == "Predicciones":
@@ -78,7 +82,7 @@ def main_streamlit():
                     left_column, right_column= st.columns([1,3])
                     with st.container():
                         with left_column:
-                            st.image(url_imagen, use_column_width=True)
+                            st.image(url_imagen, width=100)
 
                         with right_column:
                             st.title("Predicciones Deportivas") 
@@ -136,14 +140,14 @@ def main_streamlit():
                 <form action="https://formspree.io/f/xeqynqwa" method="POST">
                     <input type="email" name="email" placeholder="Correo electrónico" required>
                     <textarea name="message" placeholder="Escribe tu mensaje aquí"></textarea>
-                    <button type="submit">Enviar</button>
+                    <button type="submit">✉ Enviar</button>
                 </form>
                 """
             
             st.markdown(form, unsafe_allow_html=True)
 
         with d_columna:
-            st.write('Si quieres conocer más sobre el proyecto :blue[¡Contáctanos!]')
+            st.write('Si quieres conocer más sobre el proyecto :orange[¡Contáctanos!]')
 
 def get_teams_for_league(league):
     if league == "Premier League":
@@ -214,7 +218,7 @@ def get_file_league(league):
         return df_data
     else:
         return st.warning('Seleccione una liga disponible', icon="⚠️")
-    
+
 if __name__ == "__main__":
     if 'show_predictions' not in st.session_state:
         st.session_state.show_predictions = True 
