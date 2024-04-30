@@ -1,4 +1,4 @@
-from data_processing import load_data, clean_data, load_data_2, get_data
+from data_processing import load_data, clean_data, load_data_2, get_data, get_teams_for_league, get_data_excel
 from prediction import prediction_corners_home, prediction_over_under
 from prepare_data import select_home_away, prepare_data_corners_home, prepare_data_over_under
 from models import model_corners_home, model_over_under
@@ -11,7 +11,11 @@ df4 = "../data/SC0(3).csv"
 df5 = "../data/SC0(4).csv"
 
 nombre_archivo = '../data/premier_league_data.csv'
+df_archivo = '../data/ligas.xlsx'
+league = 'Premiership'
+df_data_excel = get_data_excel(df_archivo)
 # df = get_data(nombre_archivo)
+array = get_teams_for_league(league, df_data_excel)
 # partidos= select_home_away(df, 'West Ham', 'Liverpool')
 # partidos_equipo_local, partidos_equipo_visitante = partidos[0], partidos[1]
 # model = prepare_data_over_under(partidos_equipo_local)
@@ -23,4 +27,4 @@ nombre_archivo = '../data/premier_league_data.csv'
 # print('Se guardaron los datos correctamente.')
 # df_load = load_data_2(nombre_archivo)
 # df_unique = df_load['HomeTeam'].unique()
-# print(corner)
+print(array)

@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 from streamlit_option_menu import option_menu
-from firebase.data_processing import get_data
+from firebase.data_processing import get_teams_for_league, get_file_league, get_leagues, get_data_excel
 from firebase.prepare_data import select_home_away
 from firebase.main import predictions_results
 
@@ -62,8 +62,7 @@ def main_streamlit():
                         <input type="hidden" name="hosted_button_id" value="QZ386H6QCYFZQ" />
                         <input type="hidden" name="currency_code" value="USD" />
                         <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribe_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Subscribe" />
-                    </form>
-                    """
+                    </form> """
                 st.markdown(contact_form, unsafe_allow_html=True)
 
             with column2:
@@ -74,7 +73,9 @@ def main_streamlit():
         
         if st.session_state.show_predictions:
             
-            ligas_disponibles = ["Premier League", "LaLiga", "SerieA", "Bundesliga", "Eredivisie", "Ligue 1", "Jupiler Pro League", "Premiership"]
+            df_data_excel = get_data_excel()
+            ligas_disponibles = get_leagues(df_data_excel)
+            # ligas_disponibles = ["Premier League", "LaLiga", "SerieA", "Bundesliga", "Eredivisie", "Ligue 1", "Jupiler Pro League", "Premiership"]
     
             col1, col2= st.columns([2,2])
             with st.container():
@@ -89,7 +90,7 @@ def main_streamlit():
 
                     liga_seleccionada = st.selectbox("🌎 Selecciona una liga:", ligas_disponibles)
 
-                    equipos = get_teams_for_league(liga_seleccionada)
+                    equipos = get_teams_for_league(liga_seleccionada, df_data_excel)
                     equipo_home = st.selectbox("🏠 Equipo local:", equipos)
                     equipo_away = st.selectbox("✈ Equipo visitante:", equipos)
                     
@@ -127,7 +128,6 @@ def main_streamlit():
                         st.write(prob_corners)
                     else :
                         st.warning('Seleccione bien los equipos', icon='⚠️')
-
         else :
             st.write("Por favor, suscríbete para acceder a las sección de predicciones")
     
@@ -141,83 +141,11 @@ def main_streamlit():
                     <input type="email" name="email" placeholder="Correo electrónico" required>
                     <textarea name="message" placeholder="Escribe tu mensaje aquí"></textarea>
                     <button type="submit">✉ Enviar</button>
-                </form>
-                """
-            
+                </form> """
             st.markdown(form, unsafe_allow_html=True)
 
         with d_columna:
             st.write('Si quieres conocer más sobre el proyecto :orange[¡Contáctanos!]')
-
-def get_teams_for_league(league):
-    if league == "Premier League":
-        return ['Burnley', 'Arsenal', 'Bournemouth', 'Brighton', 'Everton', 'Sheffield United', 'Newcastle', 'Brentford', 'Chelsea', 'Man United', "Nott'm Forest", 'Fulham', 'Liverpool', 'Wolves', 'Tottenham', 'Man City', 'Aston Villa', 'West Ham', 'Crystal Palace', 'Luton']
-    elif league == "LaLiga":
-        return ['Almeria', 'Sevilla', 'Sociedad', 'Las Palmas', 'Ath Bilbao', 'Celta',
-            'Villarreal', 'Getafe', 'Cadiz', 'Ath Madrid', 'Mallorca', 'Valencia',
-            'Osasuna', 'Girona', 'Barcelona', 'Betis', 'Alaves', 'Granada', 'Vallecano', 'Real Madrid']
-    elif league == "SerieA":
-        return ['Empoli', 'Frosinone', 'Genoa', 'Inter', 'Roma', 'Sassuolo', 'Lecce', 'Udinese',
-            'Torino', 'Bologna', 'Monza', 'Milan', 'Verona', 'Fiorentina', 'Juventus',
-            'Lazio', 'Napoli', 'Salernitana', 'Cagliari', 'Atalanta']
-    elif league == "Bundesliga":
-        return ['Werder Bremen', 'Augsburg', 'Hoffenheim', 'Leverkusen', 'Stuttgart',
-            'Wolfsburg', 'Dortmund', 'Union Berlin', 'Ein Frankfurt', 'RB Leipzig',
-            'Bochum', 'Darmstadt', 'FC Koln', 'Freiburg', 'Heidenheim', "M'gladbach",
-            'Mainz', 'Bayern Munich', 'Hertha']
-    elif league == "Eredivisie":
-        return ['Volendam', 'PSV Eindhoven', 'Heerenveen', 'Ajax', 'Zwolle', 'Nijmegen',
-            'AZ Alkmaar', 'Feyenoord', 'Almere City', 'Heracles', 'Excelsior', 'Vitesse',
-            'For Sittard', 'Go Ahead Eagles', 'Utrecht', 'Sparta Rotterdam', 'Twente', 'Waalwijk']
-    elif league == "Ligue 1":
-        return ['Nice', 'Marseille', 'Paris SG', 'Brest', 'Clermont', 'Montpellier', 'Nantes',
-            'Rennes', 'Strasbourg', 'Metz', 'Lyon', 'Toulouse', 'Lille', 'Le Havre',
-            'Lorient', 'Reims', 'Monaco', 'Lens']
-    elif league == "Jupiler Pro League":
-        return ['St. Gilloise', 'Eupen', 'Charleroi', 'RWD Molenbeek', 'Antwerp', 'Gent',
-            'Club Brugge', 'St Truiden', 'Standard', 'Genk', 'Cercle Brugge',
-            'Oud-Heverlee Leuven', 'Anderlecht', 'Mechelen', 'Westerlo', 'Kortrijk']
-    elif league == "Premiership":
-        return ['Celtic', 'Dundee', 'Livingston', 'St Johnstone', 'Kilmarnock', 'Hibernian',
-            'Rangers', 'Ross County', 'St Mirren', 'Aberdeen', 'Hearts', 'Motherwell']
-    else:
-        return st.warning('Seleccione un equipo disponible', icon="⚠️")
-
-def get_file_league(league):
-    if league == "Premier League":
-        file = './data/premier_league_data.csv'
-        df_data = get_data(file)
-        return df_data
-    elif league == "LaLiga":
-        file = './data/laliga_data.csv'
-        df_data = get_data(file)
-        return df_data
-    elif league == "SerieA":
-        file = './data/seriea_data.csv'
-        df_data = get_data(file)
-        return df_data
-    elif league == "Bundesliga":
-        file = './data/bundesliga_data.csv'
-        df_data = get_data(file)
-        return df_data
-    elif league == "Eredivisie":
-        file = './data/eredivisie_data.csv'
-        df_premier_legaue = get_data(file)
-        return df_premier_legaue
-    elif league == "Ligue 1":
-        file = './data/ligue1_data.csv'
-        df_data = get_data(file)
-        return df_data
-    elif league == "Jupiler Pro League":
-        file = './data/liga_belgica_data.csv'
-        df_data = get_data(file)
-        return df_data
-    elif league == "Premiership":
-        file = './data/liga_escocia_data.csv'
-        df_data = get_data(file)
-        return df_data
-    else:
-        return st.warning('Seleccione una liga disponible', icon="⚠️")
 
 if __name__ == "__main__":
     if 'show_predictions' not in st.session_state:
